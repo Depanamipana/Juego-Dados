@@ -36,7 +36,7 @@ public class Eljugador : MonoBehaviour
 
     public void SubirApuesta()
     {
-        int maxApuesta = dinero; // no puedes apostar más de lo que tienes
+        int maxApuesta = dinero; 
         apuesta = Mathf.Clamp(apuesta + pasoApuesta, apuestaMin, maxApuesta);
         ActualizarUI();
     }
@@ -75,32 +75,28 @@ public class Eljugador : MonoBehaviour
             return;
         }
 
-        // Tirar el dado
         dados.TirarDado();
 
-        // Esperar el suspenso y luego juzgar
         StartCoroutine(JuzgarTrasSuspenso());
     }
 
     System.Collections.IEnumerator JuzgarTrasSuspenso()
     {
-        // Espera el mismo tiempo que usa el dado (más un pequeño margen por seguridad)
         yield return new WaitForSeconds(dados.suspenso + 0.05f);
 
         int resultado = dados.resultado;
 
         if (resultado == numeroElegido)
         {
-            dinero += apuesta; // gana x2 (neto +apuesta)
+            dinero += apuesta; 
             if (mensajeFinalText) mensajeFinalText.text = $" Vamooooooos ¡Ganaste! Salió {resultado}";
         }
         else
         {
-            dinero -= apuesta; // pierde lo apostado
+            dinero -= apuesta; 
             if (mensajeFinalText) mensajeFinalText.text = $" Que mal, Perdiste. Salió {resultado}";
         }
 
-        // Opcional: resetear apuesta después de cada ronda
         apuesta = Mathf.Clamp(apuesta, apuestaMin, dinero);
 
         ActualizarUI();

@@ -13,7 +13,7 @@ public class Dados : MonoBehaviour
     public void TirarDado()
 {
     sonido.Play();
-    resultado = Random.Range(1, 7); // número entre 1 y 6
+    resultado = Random.Range(1, 7); 
     StartCoroutine(MostrarCara());
 }
 
