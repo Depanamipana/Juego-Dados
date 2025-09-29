@@ -4,7 +4,6 @@ using System.Collections;
 using System;
 using UnityEngine.Events;
 
-
 public class ElJugador : MonoBehaviour
 {
     public UnityEvent GameOver;
@@ -24,6 +23,8 @@ public class ElJugador : MonoBehaviour
     [SerializeField] int maxNumero = 6;
 
     [SerializeField] Dados dados;
+
+    public int DineroActual => dinero;
 
     void Start()
     {
@@ -68,12 +69,12 @@ public class ElJugador : MonoBehaviour
     {
         if (apuesta <= 0)
         {
-            if (mensajeFinalText) mensajeFinalText.text = "Apuesta debe ser > 0";
+            if (mensajeFinalText) mensajeFinalText.text = "La apuesta debe ser > 0.";
             return;
         }
         if (apuesta > dinero)
         {
-            if (mensajeFinalText) mensajeFinalText.text = "No tienes suficiente dinero";
+            if (mensajeFinalText) mensajeFinalText.text = "¡Estás sin dinero!";
             return;
         }
         dados.TirarDado();
@@ -89,23 +90,31 @@ public class ElJugador : MonoBehaviour
         if (acierta)
         {
             dinero += apuesta;
-            if (mensajeFinalText) mensajeFinalText.text = $"🎉 Ganaste. Salió {numeroElegido}";
+            if (mensajeFinalText) mensajeFinalText.text = $"¡Ganaste! Salió el {numeroElegido}.";
         }
         else
         {
             dinero -= apuesta;
-            if (mensajeFinalText) mensajeFinalText.text = $"❌ Perdiste. Salió {arr[0]}";
+            if (mensajeFinalText) mensajeFinalText.text = $"Perdiste. Salió el {arr[0]}.";
         }
-        
+
         if (dinero <= 0)
         {
+            dinero = 0;
+            ActualizarUI();
             GameOver.Invoke();
+            yield break;
         }
-    
 
         apuesta = Mathf.Clamp(apuesta, apuestaMin, dinero);
         ActualizarUI();
     }
 
-
+    public void AgregarDinero(int cantidad)
+    {
+        dinero += cantidad;
+        if (dinero < 0) dinero = 0;
+        ActualizarUI();
+        if (dinero <= 0) GameOver.Invoke();
+    }
 }

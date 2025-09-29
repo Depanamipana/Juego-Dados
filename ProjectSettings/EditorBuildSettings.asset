@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ANIMACIONES/Menu.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/ANIMACIONES/lvl3.unity
+    guid: 11ee4caace3c7c741a581e37ae8c660f
+  - enabled: 1
+    path: Assets/ANIMACIONES/lvl2.unity
+    guid: 5fb21c9baf2c50c4ea3fae2c4d5dc3e3
+  - enabled: 1
+    path: Assets/ANIMACIONES/lvl1.unity
+    guid: d3d75437fd51bb744a1ea8c895b8b89e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
