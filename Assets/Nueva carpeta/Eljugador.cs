@@ -1,9 +1,14 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using System;
+using UnityEngine.Events;
 
-public class Eljugador : MonoBehaviour
+
+public class ElJugador : MonoBehaviour
 {
+    public UnityEvent GameOver;
+
     [SerializeField] TMP_Text plataText;
     [SerializeField] TMP_Text apuestaText;
     [SerializeField] TMP_Text numeroText;
@@ -20,10 +25,9 @@ public class Eljugador : MonoBehaviour
 
     [SerializeField] Dados dados;
 
-
-
     void Start()
     {
+        if (mensajeFinalText) mensajeFinalText.text = "";
         ActualizarUI();
     }
 
@@ -36,7 +40,7 @@ public class Eljugador : MonoBehaviour
 
     public void SubirApuesta()
     {
-        int maxApuesta = dinero; 
+        int maxApuesta = dinero;
         apuesta = Mathf.Clamp(apuesta + pasoApuesta, apuestaMin, maxApuesta);
         ActualizarUI();
     }
@@ -60,10 +64,8 @@ public class Eljugador : MonoBehaviour
         ActualizarUI();
     }
 
-
     public void Confirmar()
     {
-        // Validaciones básicas
         if (apuesta <= 0)
         {
             if (mensajeFinalText) mensajeFinalText.text = "Apuesta debe ser > 0";
@@ -74,38 +76,36 @@ public class Eljugador : MonoBehaviour
             if (mensajeFinalText) mensajeFinalText.text = "No tienes suficiente dinero";
             return;
         }
-
         dados.TirarDado();
-
         StartCoroutine(JuzgarTrasSuspenso());
     }
 
-    System.Collections.IEnumerator JuzgarTrasSuspenso()
+    IEnumerator JuzgarTrasSuspenso()
     {
         yield return new WaitForSeconds(dados.suspenso + 0.05f);
+        var arr = dados.resultados;
+        bool acierta = Array.Exists(arr, r => r == numeroElegido);
 
-        int resultado = dados.resultado;
-
-        if (resultado == numeroElegido)
+        if (acierta)
         {
-            dinero += apuesta; 
-            if (mensajeFinalText) mensajeFinalText.text = $" Vamooooooos ¡Ganaste! Salió {resultado}";
+            dinero += apuesta;
+            if (mensajeFinalText) mensajeFinalText.text = $"🎉 Ganaste. Salió {numeroElegido}";
         }
         else
         {
-            dinero -= apuesta; 
-            if (mensajeFinalText) mensajeFinalText.text = $" Que mal, Perdiste. Salió {resultado}";
+            dinero -= apuesta;
+            if (mensajeFinalText) mensajeFinalText.text = $"❌ Perdiste. Salió {arr[0]}";
         }
+        
+        if (dinero <= 0)
+        {
+            GameOver.Invoke();
+        }
+    
 
         apuesta = Mathf.Clamp(apuesta, apuestaMin, dinero);
-
         ActualizarUI();
-
-
     }
-    
 
 
 }
-
-

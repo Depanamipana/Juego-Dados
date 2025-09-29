@@ -1,26 +1,29 @@
 using UnityEngine;
-using UnityEngine.UI; 
-using System.Collections; 
+using UnityEngine.UI;
+using System.Collections;
 
 public class Dados : MonoBehaviour
 {
-    public Sprite[] carasdelosdados; 
-    public Image dadoUI; 
-    public int resultado; 
-    public AudioSource sonido; 
-    public float suspenso = 0.5f; 
+    public Sprite[] carasdelosdados;
+    [SerializeField] private Image[] dadosUI;
+    public AudioSource sonido;
+    public float suspenso = 0.5f;
+
+    public int[] resultados { get; private set; }
 
     public void TirarDado()
-{
-    sonido.Play();
-    resultado = Random.Range(1, 7); 
-    StartCoroutine(MostrarCara());
-}
+    {
+        if (sonido) sonido.Play();
+        resultados = new int[dadosUI.Length];
+        for (int i = 0; i < dadosUI.Length; i++)
+            resultados[i] = Random.Range(1, 7);
+        StartCoroutine(MostrarCaras());
+    }
 
-private IEnumerator MostrarCara()
-{
-    yield return new WaitForSeconds(suspenso);
-    dadoUI.sprite = carasdelosdados[resultado - 1];
-}
-    
+    private IEnumerator MostrarCaras()
+    {
+        yield return new WaitForSeconds(suspenso);
+        for (int i = 0; i < dadosUI.Length; i++)
+            if (dadosUI[i]) dadosUI[i].sprite = carasdelosdados[resultados[i] - 1];
+    }
 }
